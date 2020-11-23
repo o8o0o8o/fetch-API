@@ -27,3 +27,13 @@ function getPictures() {
       });
     });
 }
+
+
+function handleKeyboardPress(e) { 
+  if (e.code === 'Enter') {
+    getPictures();
+  }
+}
+
+
+document.body.onkeydown = handleKeyboardPress;
