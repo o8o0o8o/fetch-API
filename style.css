@@ -4,13 +4,17 @@ body {
 
 .search {
   margin-bottom: 50px;
-  width: 600px;
+  width: 67vw;
   margin-left: auto;
   margin-right: auto;
 }
 
 .search-panel {
-  width: 500px;
+  width: 50vw;
+}
+
+.btn {
+  width: 10vw;
 }
 
 .picture-container {
