@@ -4,17 +4,32 @@ body {
 
 .search {
   margin-bottom: 50px;
-  width: 67vw;
+  width: 87vw;
+  display: flex;
+  justify-content: space-between;
   margin-left: auto;
   margin-right: auto;
 }
 
 .search-panel {
-  width: 50vw;
+  width: 55vw;
+  border: 1px lightgray solid;
+  background-color: #F4F4F7;
+  border-radius: 25px;
+  height: 38px;
+}
+
+.search-panel::placeholder {
+  padding-left: calc(3vw + 16px);
 }
 
 .btn {
-  width: 10vw;
+  width: 20vw;
+  background-color: #8E82CB;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  height: 40px;
 }
 
 .picture-container {
@@ -45,5 +60,23 @@ body {
 @media (min-width: 1001px) {
   .picture-container {
     width: 1000px;
+  }
+}
+
+.lupe {
+  position: relative;
+  left: -80vw;
+  top: 0.9em;
+}
+
+@media (min-width: 509px) {
+  .lupe {
+    left: -82vw;
+  }
+}
+
+@media (min-width: 951px) {
+  .lupe {
+    left: -84vw;
   }
 }
