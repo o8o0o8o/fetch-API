@@ -17,9 +17,6 @@ body {
   background-color: #F4F4F7;
   border-radius: 25px;
   height: 38px;
-}
-
-.search-panel::placeholder {
   padding-left: calc(3vw + 16px);
 }
 
