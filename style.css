@@ -14,7 +14,7 @@ body {
 .search-panel {
   width: 55vw;
   border: 1px lightgray solid;
-  background-color: #F4F4F7;
+  background-color: #f4f4f7;
   border-radius: 25px;
   height: 38px;
   padding-left: calc(3vw + 16px);
@@ -22,7 +22,7 @@ body {
 
 .btn {
   width: 20vw;
-  background-color: #8E82CB;
+  background-color: #8e82cb;
   border: none;
   border-radius: 25px;
   color: white;
@@ -62,18 +62,6 @@ body {
 
 .lupe {
   position: relative;
-  left: -80vw;
+  left: calc(-87vw + 16px + 2vw);
   top: 0.9em;
-}
-
-@media (min-width: 509px) {
-  .lupe {
-    left: -82vw;
-  }
-}
-
-@media (min-width: 951px) {
-  .lupe {
-    left: -84vw;
-  }
 }
