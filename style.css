@@ -65,3 +65,9 @@ body {
   left: calc(-87vw + 16px + 2vw);
   top: 0.9em;
 }
+
+header {
+  top: 10%;
+  left: 7%;
+  position: absolute;
+}
