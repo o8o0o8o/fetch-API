@@ -51,7 +51,7 @@ async function workflow() {
 
 function handleKeyboardPress(e) {
   if (e.code === "Enter") {
-    getPictures();
+    workflow();
   }
 }
 
