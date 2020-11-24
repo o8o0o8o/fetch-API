@@ -30,8 +30,7 @@
   display: flex;
   width: 100vw;
   flex-wrap: wrap;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 50px auto auto auto;
 }
 
 .img-small {
@@ -39,6 +38,13 @@
   height: 200px;
   object-fit: cover;
   margin: 10px auto;
+  cursor: pointer;
+}
+
+.img-small:hover {
+  transform: scale(1.1);
+  border: gold 2px solid;
+  box-shadow: rgb(88, 88, 88) 5px 5px 15px;
 }
 
 .img-big {
