@@ -62,7 +62,7 @@ body {
 
 .lupe {
   position: relative;
-  left: calc(-87vw + 16px + 2vw);
+  left: calc(-87vw + 16px + 2vw + 40px);
   top: 0.9em;
 }
 
@@ -70,4 +70,14 @@ header {
   top: 1%;
   left: 7%;
   position: absolute;
+}
+
+.loader {
+  position: relative;
+  left: calc(-31vw);
+  top: 0;
+}
+
+.hidden {
+  visibility: hidden;
 }
