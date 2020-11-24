@@ -1,10 +1,25 @@
+function toggleLoader() {
+  const loader = document.querySelector(".loader");
+
+  loader.classList.toggle("hidden");
+}
+
+let isRequestIsSend = false;
+
 function getPictures() {
+  toggleLoader();
   const searchPanel = document.querySelector(".search-panel");
   const tag = searchPanel.value || "nature";
   const key = "abyh5yYrieq3s9G2eYr5Zgimn8ae_uxG3DRCf03r0Qc";
   const url = `https://api.unsplash.com/search/photos?per_page=6&query=${tag}&client_id=${key}`;
 
-  return fetch(url).then((res) => res.json());
+  return (isRequestIsSend =
+    true &&
+    fetch(url).then((res) => {
+      isRequestIsSend = false;
+      toggleLoader();
+      return res.json();
+    }));
 }
 
 function showPictures(data) {
@@ -29,7 +44,9 @@ function showPictures(data) {
 }
 
 async function workflow() {
-  showPictures(await getPictures());
+  if (!isRequestIsSend) {
+    showPictures(await getPictures());
+  }
 }
 
 function handleKeyboardPress(e) {
