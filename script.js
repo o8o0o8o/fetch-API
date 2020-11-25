@@ -112,8 +112,13 @@ function handleKeyboardPress(e) {
   }
 }
 
+function deleteAllDuplicates() {
+  const duplicates = document.querySelectorAll(".img-small-duplicate");
+  duplicates.forEach((a) => a.remove());
+}
+
 function handleMousePress(e) {
-  if (e.target.className === "img-small") {
+  if (e.target.className === "img-small img-small-duplicate") {
     storage(document.body.innerHTML);
     document.body.innerHTML = "";
     loaderBig();
@@ -127,8 +132,57 @@ function handleMousePress(e) {
     };
   } else if (e.target.className === "img-big") {
     initialize(storage());
+    deleteAllDuplicates();
   }
 }
 
+function getCoords(elem) {
+  var box = elem.getBoundingClientRect();
+
+  return {
+    top: box.top + pageYOffset,
+    left: box.left + pageXOffset,
+  };
+}
+
+function duplicateHelper(e) {
+  const parent = e.target.parentNode;
+  const duplicate = e.target.cloneNode();
+  const coordinates = getCoords(e.target);
+
+  duplicate.setAttribute(
+    "style",
+    `top: ${coordinates.top}px; left: ${coordinates.left}px`
+  );
+  duplicate.classList.add("img-small-duplicate");
+  parent.append(duplicate);
+}
+
+function handleMouseHover(e) {
+  if (e.target.className === "img-small") {
+    duplicateHelper(e);
+  }
+}
+
+function handleMouseOut(e) {
+  if (e.target.className === "img-small img-small-duplicate") {
+    e.target.remove();
+  }
+}
+
+function handleTouch(e) {
+  console.log(e);
+  if (e.target.className === "img-small") {
+    duplicateHelper(e);
+  } else {
+    deleteAllDuplicates();
+  }
+}
+
+document.body.onresize = deleteAllDuplicates;
+document.body.ontouchend = handleTouch;
+document.body.ontouchstart = handleTouch;
 document.body.onkeydown = handleKeyboardPress;
 document.body.onclick = handleMousePress;
+document.body.onmouseover = handleMouseHover;
+document.body.onmouseout = handleMouseOut;
