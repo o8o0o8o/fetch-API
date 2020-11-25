@@ -1,28 +1,40 @@
-function storage(val) {
+function storeDOM(val) {
   if (val) {
-    localStorage.setItem("state", JSON.stringify(val));
+    localStorage.setItem("DOM", JSON.stringify(val));
   }
-  return JSON.parse(localStorage.getItem("state"));
+  return JSON.parse(localStorage.getItem("DOM"));
 }
 
-function initialize(state) {
-  const header = document.createElement("header");
-  const link = document.createElement("a");
-  const search = document.createElement("div");
-  const input = document.createElement("input");
-  const button = document.createElement("button");
-  const icon = document.createElement("i");
-  const loader = document.createElement("div");
-  const pictureContainer = document.createElement("div");
+let isRequestIsSend = false;
 
-  document.body.innerHTML = "";
+function initialize(state) {
   if (state) {
-    document.body.innerHTML = storage();
+    document.body.innerHTML = storeDOM();
   } else {
+    const header = document.createElement("header");
+    const link = document.createElement("a");
+    const search = document.createElement("div");
+    const input = document.createElement("input");
+    const button = document.createElement("button");
+    const icon = document.createElement("i");
+    const loader = document.createElement("div");
+    const pictureContainer = document.createElement("div");
+    const linkToShareWrapper = document.createElement("div");
+    const linkToShareIcon = document.createElement("i");
+    const linkToShare = document.createElement("a");
+
+    document.body.innerHTML = "";
     link.classList.add("link");
     link.setAttribute("href", "https://github.com/o8o0o8o/fetch-API");
     link.innerText = "Repository";
     header.append(link);
+    linkToShareIcon.classList.add("fas");
+    linkToShareIcon.classList.add("fa-share");
+    linkToShareWrapper.append(linkToShareIcon);
+    linkToShareWrapper.append(linkToShare);
+    linkToShare.innerText = "Nothing to share";
+    linkToShare.classList.add("link-to-share");
+    header.append(linkToShareWrapper);
     document.body.append(header);
     search.classList.add("search");
     input.classList.add("search-panel");
@@ -46,6 +58,10 @@ function initialize(state) {
     document.body.append(search);
     pictureContainer.classList.add("picture-container");
     document.body.append(pictureContainer);
+
+    if (window.location.search) {
+      workflow(window.location.search);
+    }
   }
 }
 
@@ -57,12 +73,10 @@ function toggleLoader() {
   loader.classList.toggle("hidden");
 }
 
-let isRequestIsSend = false;
-
-function getPictures() {
+function getPictures(query) {
   toggleLoader();
   const searchPanel = document.querySelector(".search-panel");
-  const tag = searchPanel.value || "nature";
+  const tag = query || searchPanel.value || "nature";
   const key = "abyh5yYrieq3s9G2eYr5Zgimn8ae_uxG3DRCf03r0Qc";
   const url = `https://api.unsplash.com/search/photos?per_page=6&query=${tag}&client_id=${key}`;
 
@@ -75,15 +89,18 @@ function getPictures() {
     }));
 }
 
-function loaderBig() {
-  const loaderWrapper = document.createElement("div");
-  const loaderBig = document.createElement("div");
+function loaderBig(destroy) {
+  if (destroy) {
+    document.querySelector(".loader-wrapper").remove();
+  } else {
+    const loaderWrapper = document.createElement("div");
+    const loaderBig = document.createElement("div");
 
-  document.body.innerHTML = "";
-  loaderBig.classList.add("loader-big");
-  loaderWrapper.classList.add("loader-wrapper");
-  loaderWrapper.append(loaderBig);
-  document.body.append(loaderWrapper);
+    loaderBig.classList.add("loader-big");
+    loaderWrapper.classList.add("loader-wrapper");
+    loaderWrapper.append(loaderBig);
+    document.body.append(loaderWrapper);
+  }
 }
 
 function showPictures(data) {
@@ -100,9 +117,37 @@ function showPictures(data) {
   });
 }
 
-async function workflow() {
+function updateLinkToShare() {
+  const link = document.querySelector(".link-to-share");
+
+  link.innerText = "Link to Share";
+  link.setAttribute("href", window.location.href);
+}
+
+function updateHistory() {
+  const searchPanel = document.querySelector(".search-panel");
+
+  if (searchPanel.value) {
+    window.history.pushState(
+      1,
+      `Search results for ${searchPanel.value}`,
+      `?${searchPanel.value}`
+    );
+    updateLinkToShare();
+  } else if (window.location.search) {
+    window.history.pushState(
+      1,
+      `Search results for ${window.location.search}`,
+      `${window.location.search}`
+    );
+    updateLinkToShare();
+  }
+}
+
+async function workflow(query) {
   if (!isRequestIsSend) {
-    showPictures(await getPictures());
+    updateHistory();
+    showPictures(await getPictures(query));
   }
 }
 
@@ -119,7 +164,7 @@ function deleteAllDuplicates() {
 
 function handleMousePress(e) {
   if (e.target.className === "img-small img-small-duplicate") {
-    storage(document.body.innerHTML);
+    storeDOM(document.body.innerHTML);
     document.body.innerHTML = "";
     loaderBig();
     const imgBig = document.createElement("img");
@@ -129,9 +174,10 @@ function handleMousePress(e) {
 
     imgBig.onload = () => {
       document.body.append(imgBig);
+      loaderBig(true);
     };
   } else if (e.target.className === "img-big") {
-    initialize(storage());
+    initialize(storeDOM());
     deleteAllDuplicates();
   }
 }
@@ -171,7 +217,6 @@ function handleMouseOut(e) {
 }
 
 function handleTouch(e) {
-  console.log(e);
   if (e.target.className === "img-small") {
     duplicateHelper(e);
   } else {
