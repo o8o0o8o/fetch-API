@@ -155,6 +155,10 @@ function handleKeyboardPress(e) {
   if (e.code === "Enter") {
     workflow();
   }
+  if (e.code === "Escape") {
+    initialize(storeDOM());
+    deleteAllDuplicates();
+  }
 }
 
 function deleteAllDuplicates() {
