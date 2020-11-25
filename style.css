@@ -1,9 +1,14 @@
+body {
+  margin: 0;
+  height: 100vh;
+}
+
 .search {
   margin-bottom: 50px;
   width: 87vw;
   display: flex;
   justify-content: space-between;
-  margin: 10% auto auto auto;
+  margin: auto;
   margin-left: auto;
   margin-right: auto;
 }
@@ -41,7 +46,8 @@
   cursor: pointer;
 }
 
-.img-small:hover {
+.img-small-duplicate {
+  position: absolute;
   transform: scale(1.1);
   border: gold 2px solid;
   box-shadow: rgb(88, 88, 88) 5px 5px 15px;
@@ -70,9 +76,7 @@
 }
 
 header {
-  top: 1%;
-  left: 7%;
-  position: absolute;
+  padding: 7%;
 }
 
 .loader {
