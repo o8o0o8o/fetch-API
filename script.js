@@ -1,4 +1,11 @@
-function initialize() {
+function storage(val) {
+  if (val) {
+    localStorage.setItem("state", JSON.stringify(val));
+  }
+  return JSON.parse(localStorage.getItem("state"));
+}
+
+function initialize(state) {
   const header = document.createElement("header");
   const link = document.createElement("a");
   const search = document.createElement("div");
@@ -9,33 +16,37 @@ function initialize() {
   const pictureContainer = document.createElement("div");
 
   document.body.innerHTML = "";
-  link.classList.add("link");
-  link.setAttribute("href", "https://github.com/o8o0o8o/fetch-API");
-  link.innerText = "Repository";
-  header.append(link);
-  document.body.append(header);
-  search.classList.add("search");
-  input.classList.add("search-panel");
-  input.setAttribute("placeholder", "Keyword");
-  button.classList.add("btn");
-  button.setAttribute("onclick", "workflow()");
-  button.innerText = "Search";
-  icon.classList.add("fas");
-  icon.classList.add("fa-search");
-  icon.classList.add("lupe");
-  loader.classList.add("ld");
-  loader.classList.add("ld-cross");
-  loader.classList.add("ld-spin-fast");
-  loader.classList.add("loader");
-  loader.classList.add("hidden");
-  loader.setAttribute("style", "font-size: 40px; color: #8da");
-  search.append(input);
-  search.append(button);
-  search.append(icon);
-  search.append(loader);
-  document.body.append(search);
-  pictureContainer.classList.add("picture-container");
-  document.body.append(pictureContainer);
+  if (state) {
+    document.body.innerHTML = storage();
+  } else {
+    link.classList.add("link");
+    link.setAttribute("href", "https://github.com/o8o0o8o/fetch-API");
+    link.innerText = "Repository";
+    header.append(link);
+    document.body.append(header);
+    search.classList.add("search");
+    input.classList.add("search-panel");
+    input.setAttribute("placeholder", "Keyword");
+    button.classList.add("btn");
+    button.setAttribute("onclick", "workflow()");
+    button.innerText = "Search";
+    icon.classList.add("fas");
+    icon.classList.add("fa-search");
+    icon.classList.add("lupe");
+    loader.classList.add("ld");
+    loader.classList.add("ld-cross");
+    loader.classList.add("ld-spin-fast");
+    loader.classList.add("loader");
+    loader.classList.add("hidden");
+    loader.setAttribute("style", "font-size: 40px; color: #8da");
+    search.append(input);
+    search.append(button);
+    search.append(icon);
+    search.append(loader);
+    document.body.append(search);
+    pictureContainer.classList.add("picture-container");
+    document.body.append(pictureContainer);
+  }
 }
 
 initialize();
@@ -68,6 +79,7 @@ function loaderBig() {
   const loaderWrapper = document.createElement("div");
   const loaderBig = document.createElement("div");
 
+  document.body.innerHTML = "";
   loaderBig.classList.add("loader-big");
   loaderWrapper.classList.add("loader-wrapper");
   loaderWrapper.append(loaderBig);
@@ -81,20 +93,9 @@ function showPictures(data) {
   data.results.forEach((element) => {
     const img = document.createElement("img");
     img.setAttribute("src", element.urls.small);
+    img.setAttribute("data-bigUrl", element.urls.full);
     img.classList.add("img-small");
-    img.onclick = () => {
-      document.body.innerHTML = "";
-      loaderBig();
-      const imgBig = document.createElement("img");
-      imgBig.setAttribute("src", element.urls.full);
-      imgBig.classList.add("img-big");
-      imgBig.onclick = () => {
-        initialize();
-      };
-      imgBig.onload = () => {
-        document.body.append(imgBig);
-      };
-    };
+    img.onclick = () => {};
     container.append(img);
   });
 }
@@ -111,4 +112,23 @@ function handleKeyboardPress(e) {
   }
 }
 
+function handleMousePress(e) {
+  if (e.target.className === "img-small") {
+    storage(document.body.innerHTML);
+    document.body.innerHTML = "";
+    loaderBig();
+    const imgBig = document.createElement("img");
+    const url = e.target.getAttribute("data-bigUrl");
+    imgBig.setAttribute("src", url);
+    imgBig.classList.add("img-big");
+
+    imgBig.onload = () => {
+      document.body.append(imgBig);
+    };
+  } else if (e.target.className === "img-big") {
+    initialize(storage());
+  }
+}
+
 document.body.onkeydown = handleKeyboardPress;
+document.body.onclick = handleMousePress;
