@@ -9,8 +9,6 @@ body {
   display: flex;
   justify-content: space-between;
   margin: auto;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .search-panel {
@@ -76,7 +74,12 @@ body {
 }
 
 header {
-  padding: 7%;
+  padding-top: 7%;
+  padding-bottom: 5%;
+  width: 87vw;
+  margin: auto;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .loader {
