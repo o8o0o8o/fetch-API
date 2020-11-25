@@ -1,8 +1,8 @@
 function storage(val) {
   if (val) {
-    localStorage.setItem("storage", JSON.stringify(val));
+    localStorage.setItem("state", JSON.stringify(val));
   }
-  return JSON.parse(localStorage.getItem("storage"));
+  return JSON.parse(localStorage.getItem("state"));
 }
 
 function initialize(state) {
