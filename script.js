@@ -38,6 +38,7 @@ function initialize(state) {
     document.body.append(header);
     search.classList.add("search");
     input.classList.add("search-panel");
+    input.value = window.location.search.substr(1);
     input.setAttribute("placeholder", "Keyword");
     button.classList.add("btn");
     button.setAttribute("onclick", "workflow()");
