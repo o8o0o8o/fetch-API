@@ -123,7 +123,7 @@ function showPictures(data) {
       canvas.width = img.width;
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0);
-      img.setAttribute("base64", canvas.toDataURL());
+      img.setAttribute("src", canvas.toDataURL());
     };
   });
 }
@@ -135,19 +135,24 @@ function updateLinkToShare() {
   link.setAttribute("href", window.location.href);
 }
 
-function updateHistory() {
+function updateHistory(search, big) {
   const searchPanel = document.querySelector(".search-panel");
-
-  if (searchPanel.value) {
+  if (big) {
     window.history.pushState(
-      1,
+      { page: "fullscreen image" },
+      "fullscreen image",
+      ""
+    );
+  } else if (searchPanel.value && search) {
+    window.history.pushState(
+      { page: `search results for ${searchPanel.value}` },
       `Search results for ${searchPanel.value}`,
       `?${searchPanel.value}`
     );
     updateLinkToShare();
-  } else if (window.location.search) {
+  } else if (window.location.search && search) {
     window.history.pushState(
-      1,
+      { page: `search results for ${window.location.search}` },
       `Search results for ${window.location.search}`,
       `${window.location.search}`
     );
@@ -157,18 +162,26 @@ function updateHistory() {
 
 async function workflow(query) {
   if (!isRequestIsSend) {
-    updateHistory();
+    updateHistory(true);
     showPictures(await getPictures(query));
   }
 }
 
 function handleKeyboardPress(e) {
   if (e.code === "Enter") {
-    workflow();
+    if (
+      !window.history.state ||
+      !window.history.state.page.includes("fullscreen")
+    ) {
+      workflow();
+    }
   }
   if (e.code === "Escape") {
-    initialize(storeDOM());
-    deleteAllDuplicates();
+    if (window.history.state.page.includes("fullscreen")) {
+      initialize(storeDOM());
+      deleteAllDuplicates();
+      updateHistory(true);
+    }
   }
 }
 
@@ -190,10 +203,12 @@ function handleMousePress(e) {
     imgBig.onload = () => {
       document.body.append(imgBig);
       loaderBig(true);
+      updateHistory(false, true);
     };
   } else if (e.target.className === "img-big") {
     initialize(storeDOM());
     deleteAllDuplicates();
+    updateHistory(true);
   }
 }
 
@@ -209,8 +224,6 @@ function getCoords(elem) {
 function duplicateHelper(e) {
   const parent = e.target.parentNode;
   const duplicate = e.target.cloneNode();
-  duplicate.setAttribute("src", e.target.getAttribute("base64"));
-  console.log(duplicate);
   const coordinates = getCoords(e.target);
 
   duplicate.setAttribute(
