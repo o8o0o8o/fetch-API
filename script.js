@@ -109,11 +109,22 @@ function showPictures(data) {
 
   data.results.forEach((element) => {
     const img = document.createElement("img");
+
+    img.crossOrigin = "Anonymous";
     img.setAttribute("src", element.urls.small);
     img.setAttribute("data-bigUrl", element.urls.full);
     img.classList.add("img-small");
-    img.onclick = () => {};
+
     container.append(img);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      img.setAttribute("base64", canvas.toDataURL());
+    };
   });
 }
 
@@ -198,6 +209,8 @@ function getCoords(elem) {
 function duplicateHelper(e) {
   const parent = e.target.parentNode;
   const duplicate = e.target.cloneNode();
+  duplicate.setAttribute("src", e.target.getAttribute("base64"));
+  console.log(duplicate);
   const coordinates = getCoords(e.target);
 
   duplicate.setAttribute(
